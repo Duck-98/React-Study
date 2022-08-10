@@ -1,3 +1,5 @@
+// makedown 파일 데이터로 추출
+
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
@@ -14,7 +16,7 @@ export function getSortedPostsData() {
     const matterResult = matter(fileContents);
     return {
       id,
-      ...allPostsData(matterResult.data as { date: string; title: string }),
+      ...(matterResult.data as { date: string; title: string }),
     };
   });
   return allPostsData.sort((a, b) => {
