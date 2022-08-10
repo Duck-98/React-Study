@@ -1,5 +1,6 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import { getSortedPostsData } from "../lib/posts";
 import homeStyles from "../styles/Home.module.css";
 const Home: NextPage = ({
@@ -25,7 +26,9 @@ const Home: NextPage = ({
         <ul className={homeStyles.list}>
           {allPostsData.map(({ title, date, id }) => (
             <li className={homeStyles.listItem} key={id}>
-              <a>{title}</a>
+              <Link href={`/posts/${id}`}>
+                <a>{title}</a>
+              </Link>
               <br />
               <small className={homeStyles.lightNext}>{date}</small>
             </li>

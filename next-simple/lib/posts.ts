@@ -3,6 +3,8 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { remark } from "remark";
+import remarkHtml from "remark-html";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -26,4 +28,31 @@ export function getSortedPostsData() {
       return -1;
     }
   });
+}
+
+export function getAllPostsIds() {
+  const fileNames = fs.readdirSync(postsDirectory);
+  return fileNames.map((fileNames) => {
+    return {
+      params: {
+        id: fileNames.replace(/\.md$/, ""),
+      },
+    };
+  });
+  // fileNames = {}
+}
+
+export async function getPostData(id: string) {
+  const fullPath = path.join(postsDirectory, `${id}.md`);
+  const fileContents = fs.readFileSync(fullPath, "utf-8");
+  const matterResult = matter(fileContents);
+  const processContent = await remark()
+    .use(remarkHtml)
+    .process(matterResult.content);
+  const contentHtml = processContent.toString();
+  return {
+    id,
+    contentHtml,
+    ...(matterResult.data as { date: string; title: string }),
+  };
 }
